@@ -3,8 +3,6 @@ import ExtractCssChunks from 'extract-css-chunks-webpack-plugin';
 import webpack from 'webpack';
 import StatsWebpackPlugin from 'stats-webpack-plugin';
 
-const ExtractTextPlugin = require("extract-text-webpack-plugin");
-
 const entries = [path.resolve(__dirname, 'src/')];
 if (process.env.NODE_ENV === 'development') {
     entries.push('webpack-hot-middleware/client?path=/__webpack_hmr&timeout=20000&reload=false&quiet=false&noInfo=false');
@@ -20,7 +18,7 @@ const commonModules = [{
     {
         test: /(\.css|\.scss|\.sass)$/,
         exclude: /node_modules/,
-        use: ExtractTextPlugin.extract({
+        use: ExtractCssChunks.extract({
             use: [
                 {
                     loader: 'css-loader',
@@ -41,7 +39,32 @@ const commonModules = [{
             ],
             fallback: 'style-loader',
         })
-    }];
+    },
+    {
+        test: /\.svg(\?v=\d+\.\d+\.\d+)?$/,
+        use: [
+            {
+                loader: 'url-loader',
+                options: {
+                    limit: 10000,
+                    mimetype: 'image/svg+xml'
+                }
+            }
+        ]
+    },
+    {
+        test: /\.(jpe?g|png|gif|ico)$/i,
+        use: [
+            {
+                loader: 'file-loader',
+                options: {
+                    name: '[name].[ext]'
+                }
+            }
+        ]
+    },
+
+];
 
 const plugins = [
     new ExtractCssChunks(),
@@ -56,11 +79,7 @@ const plugins = [
             NODE_ENV: JSON.stringify('development')
         }
     }),
-    new webpack.HotModuleReplacementPlugin(),
-    new ExtractTextPlugin({
-        filename: 'bundle.css',
-        allChunks: true,
-    })
+    new webpack.HotModuleReplacementPlugin()
 ];
 
 export default [{

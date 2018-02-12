@@ -2,7 +2,7 @@
 import React from 'react';
 import { hydrate } from 'react-dom';
 import App from "./components/App";
-import "./styles/main.scss";
+import './styles/main.scss';
 const render = Component => {
     hydrate(
         <Component/>,
