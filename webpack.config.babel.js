@@ -107,6 +107,7 @@ export default [{
     devtool: 'inline-source-map',
     output: {
         path: path.resolve(__dirname, 'dist'),
+        publicPath: '/',
         filename: 'server.js',
         libraryTarget: 'commonjs2'
     },
